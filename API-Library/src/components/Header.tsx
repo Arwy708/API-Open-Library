@@ -11,13 +11,13 @@ export default function Header() {
     <header className="site-header">
       <div>
         <p className="eyebrow">B2 React + TypeScript</p>
-        <h1>Movie Explorer</h1>
+        <h1>Open Library</h1>
       </div>
       <nav className="nav">
         <NavLink to="/" end className={navClass}>Accueil</NavLink>
-        <NavLink to="/movies" className={navClass}>Films</NavLink>
+        <NavLink to="/books" className={navClass}>Livres</NavLink>
         <NavLink to="/favorites" className={navClass}>Favoris ({listeFavoris.length})</NavLink>
-        <NavLink to="/suggest" className={navClass}>Proposer un titre</NavLink>
+        <NavLink to="/suggest" className={navClass}>Proposer un livre</NavLink>
         <NavLink to="/about" className={navClass}>À propos</NavLink>
       </nav>
     </header>

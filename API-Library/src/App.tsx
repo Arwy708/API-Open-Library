@@ -15,8 +15,8 @@ export default function App() {
       <main className="content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/movies/:id" element={<MovieDetails />} />
+          <Route path="/books" element={<Books />} />
+          <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/suggest" element={<Proposition />} />
           <Route path="/about" element={<About />} />
