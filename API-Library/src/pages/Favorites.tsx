@@ -1,20 +1,25 @@
-import MovieCard from "../components/BookCard";
+import BookCard from "../components/BookCard";
 import { useFavoris } from "../contexte/ContexteFavoris";
 
 export default function Favorites() {
-  const { listeFavoris } = useFavoris();
+  const { favoris } = useFavoris();
 
   return (
-    <section className="panel">
+    <section>
       <p className="eyebrow">Espace personnel</p>
+
       <h2>Mes favoris</h2>
 
-      {listeFavoris.length > 0 ? (
+      {favoris.length > 0 ? (
         <div className="movie-grid">
-          {listeFavoris.map((serie) => <MovieCard key={serie.id} show={serie} />)}
+          {favoris.map((book) => (
+            <BookCard key={book.key} book={book} />
+          ))}
         </div>
       ) : (
-        <p>Aucun favori pour le moment.</p>
+        <p className="state-message">
+          Vous n'avez aucun livre en favoris.
+        </p>
       )}
     </section>
   );
