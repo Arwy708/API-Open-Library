@@ -1,31 +1,31 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import type { Show } from "../types/Show";
+import type { Book } from "../types/Book";
 
 interface ValeurFavoris {
-  listeFavoris: Show[];
-  basculerFavori: (serie: Show) => void;
-  estFavori: (identifiant: number) => boolean;
+  listeFavoris: Book[];
+  basculerFavori: (book: Book) => void;
+  estFavori: (identifiant: string) => boolean;
 }
 
 const ContexteFavoris = createContext<ValeurFavoris | null>(null);
 
 export const FournisseurFavoris = ({ children }: { children: ReactNode }) => {
-  const [listeFavoris, setListeFavoris] = useState<Show[]>([]);
+  const [listeFavoris, setListeFavoris] = useState<Book[]>([]);
 
-  const basculerFavori = (serie: Show) => {
+  const basculerFavori = (book: Book) => {
     setListeFavoris((ancienneListe) => {
-      const dejaPresent = ancienneListe.find((element) => element.id === serie.id);
+      const dejaPresent = ancienneListe.find((element) => element.key === book.key);
 
       if (dejaPresent) {
-        return ancienneListe.filter((element) => element.id !== serie.id);
+        return ancienneListe.filter((element) => element.key !== book.key);
       }
 
-      return ancienneListe.concat(serie);
+      return ancienneListe.concat(book);
     });
   };
 
-  const estFavori = (identifiant: number) =>
-    listeFavoris.filter((element) => element.id === identifiant).length > 0;
+  const estFavori = (identifiant: string) =>
+    listeFavoris.filter((element) => element.key === identifiant).length > 0;
 
   const valeur = { listeFavoris, basculerFavori, estFavori };
 

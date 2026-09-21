@@ -5,3 +5,12 @@ export interface Book {
   first_publish_year?: number;
   cover_i?: number;
 }
+
+export interface BookDetailsType {
+  key: string;
+  title: string;
+  description?: string | { value: string };
+  covers?: number[];
+  subjects?: string[];
+  first_publish_year?: number;
+}
