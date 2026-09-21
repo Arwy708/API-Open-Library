@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import Movies from "./pages/Books";
-import MovieDetails from "./pages/BookDetails";
+import Books from "./pages/Books";
+import BookDetails from "./pages/BookDetails";
 import Favorites from "./pages/Favorites";
 import Proposition from "./pages/Proposition";
 import About from "./pages/About";
