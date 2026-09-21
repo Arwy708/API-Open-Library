@@ -3,7 +3,7 @@ import BookCard from "../components/BookCard";
 import type { Book } from "../types/Book";
 import { searchBooks } from "../services/openLibrary";
 
-export default async function Books() {
+export default function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,15 +13,7 @@ export default async function Books() {
   useEffect(() => {
     async function loadBooks() {
       try {
-        const response = await fetch(
-          "https://openlibrary.org/search.json?q=dune&limit=20&fields=key,title,author_name,first_publish_year,cover_i"
-        );
-
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await searchBooks("dune");
 
         setBooks(data.docs);
       } catch {
@@ -33,9 +25,6 @@ export default async function Books() {
 
     loadBooks();
   }, []);
-
-  const data = await searchBooks("dune");
-    setBooks(data.docs);
 
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
