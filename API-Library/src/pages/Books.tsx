@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import BookCard from "../components/BookCard";
 import type { Book } from "../types/Book";
+import { searchBooks } from "../services/openLibrary";
 
-export default function Books() {
+export default async function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +33,9 @@ export default function Books() {
 
     loadBooks();
   }, []);
+
+  const data = await searchBooks("dune");
+    setBooks(data.docs);
 
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
