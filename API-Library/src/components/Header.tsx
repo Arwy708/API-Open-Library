@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div>
-        <p className="eyebrow">B2 React + TypeScript</p>
+        <p className="eyebrow">API Bibliotheque</p>
         <h1>Open Library</h1>
       </div>
       <nav className="nav">
