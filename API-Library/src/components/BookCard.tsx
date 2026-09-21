@@ -1,29 +1,53 @@
 import { Link } from "react-router-dom";
-import type { Show } from "../types/Show";
-import { toYear } from "../utils/text";
+import type { Book } from "../types/Book";
 import { useFavoris } from "../contexte/ContexteFavoris";
 
-export default function MovieCard({ show }: { show: Show }) {
+export default function BookCard({ book }: { book: Book }) {
   const { basculerFavori, estFavori } = useFavoris();
-  const marque = estFavori(show.id);
+
+  const marque = estFavori(book.key);
 
   return (
     <article className="movie-card">
-      {show.image ? (
-        <img className="poster-image" src={show.image.medium} alt={show.name} />
+      {book.cover_i ? (
+        <img
+          className="poster-image"
+          src={`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`}
+          alt={book.title}
+        />
       ) : (
-        <div className="poster">{show.name.slice(0, 1)}</div>
+        <div className="poster">
+          {book.title.slice(0, 1)}
+        </div>
       )}
 
       <div>
-        <p className="eyebrow">{show.genres[0] ?? "Non classé"}</p>
-        <h3>{show.name}</h3>
-        <p>{toYear(show.premiered)}</p>
-        <Link className="primary-button" to={`/movies/${show.id}`}>
+        <p className="eyebrow">
+          {book.author_name?.[0] ?? "Auteur inconnu"}
+        </p>
+
+        <h3>{book.title}</h3>
+
+        <p>
+          {book.first_publish_year ?? "Date inconnue"}
+        </p>
+
+        <Link
+          className="primary-button"
+          to={`/books/${encodeURIComponent(book.key)}`}
+        >
           Voir le détail
         </Link>
-        <button className={"favorite-button" + (marque ? " is-favorite" : "")} onClick={() => basculerFavori(show)}>
-          {marque ? "Retirer des favoris" : "Ajouter aux favoris"}
+
+        <button
+          className={
+            "favorite-button" + (marque ? " is-favorite" : "")
+          }
+          onClick={() => basculerFavori(book)}
+        >
+          {marque
+            ? "Retirer des favoris"
+            : "Ajouter aux favoris"}
         </button>
       </div>
     </article>

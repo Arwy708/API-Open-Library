@@ -1,44 +1,41 @@
 import { useEffect, useState } from "react";
-import MovieCard from "../components/BookCard";
-import type { Show } from "../types/Show";
+import BookCard from "../components/BookCard";
+import type { Book } from "../types/Book";
 
-export default function Movies() {
-  const [shows, setShows] = useState<Show[]>([]);
+export default function Books() {
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // état de ma recherche
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchGenre, setSearchGenre] = useState("");
-
-  const listeGenres = Array.from(new Set(shows.map((show) => show.genres).flat())).sort();
-
-  // filtrer par genre
-  const filteredShows = shows.filter((show)=>
-    show.name.toLowerCase().includes(searchTerm.toLowerCase())
-    && show.genres.some((genre) => genre.toLowerCase().includes(searchGenre.toLowerCase()))
-  );
 
   useEffect(() => {
-    async function loadShows() {
+    async function loadBooks() {
       try {
-        const response = await fetch("https://openlibrary.org/search.json?q=dune&limit=20&fields=key,title,author_name,first_publish_year,cover_i");
+        const response = await fetch(
+          "https://openlibrary.org/search.json?q=dune&limit=20&fields=key,title,author_name,first_publish_year,cover_i"
+        );
 
         if (!response.ok) {
           throw new Error(`Erreur HTTP : ${response.status}`);
         }
 
         const data = await response.json();
-        setShows(data);
-      } catch (error) {
+
+        setBooks(data.docs);
+      } catch {
         setError("Impossible de charger le catalogue.");
       } finally {
         setLoading(false);
       }
     }
 
-    loadShows();
+    loadBooks();
   }, []);
+
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return <p className="state-message">Chargement du catalogue...</p>;
@@ -53,33 +50,32 @@ export default function Movies() {
       <div className="section-heading">
         <div>
           <p className="eyebrow">Catalogue</p>
-          <h2>Films</h2>
+          <h2>Livres</h2>
         </div>
-        <p>{filteredShows.length} / {shows.length} titres affichés</p>
 
-        <input className="champ-saisie"
-        type="text" 
-        placeholder="Rechercher un film..." 
-        onChange={(event) => 
-          setSearchTerm(event.target.value)}
-          value ={searchTerm}
+        <p>
+          {filteredBooks.length} / {books.length} livres affichés
+        </p>
+
+        <input
+          className="champ-saisie"
+          type="text"
+          placeholder="Rechercher un livre..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
         />
-        <select className="champ-saisie"
-          onChange={(event) =>
-            setSearchGenre(event.target.value)}
-            value={searchGenre}
-            >
-            <option value="">Tous les genres</option>
-            {listeGenres.map((nomGenre) => <option key={nomGenre} value={nomGenre}>{nomGenre}</option>)}
-            </select>
       </div>
 
-      {filteredShows.length > 0 ? (
+      {filteredBooks.length > 0 ? (
         <div className="movie-grid">
-          {filteredShows.map((serie) => <MovieCard key={serie.id} show={serie} />)}
+          {filteredBooks.map((book) => (
+            <BookCard key={book.key} book={book} />
+          ))}
         </div>
       ) : (
-        <p className="state-message">Aucun titre ne correspond à votre recherche.</p>
+        <p className="state-message">
+          Aucun livre ne correspond à votre recherche.
+        </p>
       )}
     </section>
   );
