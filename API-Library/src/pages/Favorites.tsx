@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard";
 import { useFavoris } from "../contexte/ContexteFavoris";
 
 export default function Favorites() {
-  const { favoris } = useFavoris();
+  const { listeFavoris } = useFavoris();
 
   return (
     <section>
@@ -10,9 +10,9 @@ export default function Favorites() {
 
       <h2>Mes favoris</h2>
 
-      {favoris.length > 0 ? (
+      {listeFavoris.length > 0 ? (
         <div className="movie-grid">
-          {favoris.map((book) => (
+          {listeFavoris.map((book) => (
             <BookCard key={book.key} book={book} />
           ))}
         </div>
