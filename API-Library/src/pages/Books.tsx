@@ -9,6 +9,7 @@ export default function Books() {
   const [error, setError] = useState<string | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [author, setAuthor] = useState("");
 
   useEffect(() => {
     async function loadBooks() {
@@ -27,8 +28,9 @@ export default function Books() {
   }, []);
 
   const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  (book.author_name?.[0] ?? "").toLowerCase().includes(author.toLowerCase())
+);
 
   if (loading) {
     return <p className="state-message">Chargement du catalogue...</p>;
@@ -56,6 +58,13 @@ export default function Books() {
           placeholder="Rechercher un livre..."
           value={searchTerm}
           onChange={(event) => setSearchTerm(event.target.value)}
+        />
+        <input
+          className="champ-saisie"
+          type="text"
+          placeholder="Rechercher par auteur..."
+          value={author}
+          onChange={(event) => setAuthor(event.target.value)}
         />
       </div>
 

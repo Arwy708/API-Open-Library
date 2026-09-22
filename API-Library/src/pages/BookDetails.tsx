@@ -1,84 +1,50 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import type { BookDetailsType } from "../types/Book";
+import { getBookDetails } from "../services/openLibrary";
 
 export default function BookDetails() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-
+  const { id } = useParams();
   const [book, setBook] = useState<BookDetailsType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    async function loadBook() {
-      if (!id) return;
+    if (!id) return;
 
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Décodage du paramètre id (ex: "works%2FOL893415W" -> "works/OL893415W")
-        const decodedId = decodeURIComponent(id);
-        const response = await fetch(`https://openlibrary.org/${decodedId}.json`);
-
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-
-        const data: BookDetailsType = await response.json();
-        setBook(data);
-      } catch {
-        setError("Ce livre est introuvable.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadBook();
+    getBookDetails(id)
+      .then(setBook)
+      .catch(() => setError(true));
   }, [id]);
 
-  if (loading) {
-    return <p className="state-message">Chargement du livre...</p>;
-  }
-
-  if (error || !book) {
+  if (error) {
     return (
       <section className="panel">
-        <p className="eyebrow">Erreur</p>
         <h2>Livre introuvable</h2>
-        <p>Aucune ressource ne correspond à cet identifiant.</p>
-        <Link className="primary-button" to="/books">
-          Retour au catalogue
-        </Link>
+        <Link to="/books">Retour au catalogue</Link>
       </section>
     );
   }
 
-  // Extraction propre de la description
-  const descriptionText =
+  if (!book) {
+    return <p className="state-message">Chargement...</p>;
+  }
+
+  const description =
     typeof book.description === "string"
       ? book.description
-      : book.description?.value ?? "Aucune description disponible.";
-
-  // Récupération de l'image de couverture si disponible
-  const coverUrl = book.covers?.[0]
-    ? `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`
-    : null;
+      : book.description?.value;
 
   return (
     <section className="panel">
-      <p className="eyebrow">
-        {book.subjects?.slice(0, 3).join(" · ") || "Livre"}
-      </p>
+      <p>{book.subjects?.slice(0, 3).join(" · ") || "Livre"}</p>
 
       <h2>{book.title}</h2>
 
-      {coverUrl && (
+      {book.covers?.[0] && (
         <img
-          src={coverUrl}
-          alt={`Couverture de ${book.title}`}
           className="book-cover"
+          src={`https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`}
+          alt={`Couverture de ${book.title}`}
         />
       )}
 
@@ -87,11 +53,10 @@ export default function BookDetails() {
         {book.first_publish_year ?? "Inconnue"}
       </p>
 
-      <p>{descriptionText}</p>
+      <p>{description || "Aucune description disponible."}</p>
 
-      <button className="secondary-button" onClick={() => navigate("/books")}>
-        ← Retour aux livres
-      </button>
+      <Link to="/books">← Retour aux livres</Link>
     </section>
   );
 }
+

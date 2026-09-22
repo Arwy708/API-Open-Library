@@ -34,7 +34,7 @@ export default function BookCard({ book }: { book: Book }) {
 
         <Link
           className="primary-button"
-          to={`/books/${encodeURIComponent(book.key)}`}
+          to={`/books/${book.key.split("/").pop()}`}
         >
           Voir le détail
         </Link>

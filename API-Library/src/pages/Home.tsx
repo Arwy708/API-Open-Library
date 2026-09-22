@@ -3,14 +3,12 @@ import { Link } from "react-router-dom";
 export default function Home() {
   return (
     <section className="hero">
-      <p className="eyebrow">Projet Movie Explorer</p>
-      <h2>Découvrez notre sélection de titres</h2>
+      <p className="eyebrow">Projet Open Library</p>
+      <h2>Découvrez notre sélection de Livres</h2>
       <p>
-        Cette version reprend les séances précédentes : pages et navigation, route
-        dynamique, page 404, puis chargement du catalogue depuis une API distante
-        avec gestion du chargement et des erreurs.
+        Voici une sélection de livres que vous pouvez explorer. Vous pouvez également rechercher des livres spécifiques et les ajouter à votre liste de favoris pour les retrouver facilement plus tard.
       </p>
-      <Link className="primary-button" to="/movies">Voir le catalogue</Link>
+      <Link className="primary-button" to="/books">Voir la bibliotheque</Link>
     </section>
   );
 }
