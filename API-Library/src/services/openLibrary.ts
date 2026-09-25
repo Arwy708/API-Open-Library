@@ -1,6 +1,6 @@
 import type { Book, BookDetailsType } from "../types/Book";
 
-const API_URL = "https://openlibrary.org";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface OpenLibraryResponse {
   numFound: number;

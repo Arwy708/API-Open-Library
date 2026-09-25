@@ -25,7 +25,7 @@ export const FournisseurFavoris = ({ children }: { children: ReactNode }) => {
   };
 
   const estFavori = (identifiant: string) =>
-    listeFavoris.filter((element) => element.key === identifiant).length > 0;
+    listeFavoris.some((element) => element.key === identifiant);
 
   const valeur = { listeFavoris, basculerFavori, estFavori };
 

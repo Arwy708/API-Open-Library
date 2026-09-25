@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import type { Book } from "../types/Book";
 import { useFavoris } from "../contexte/ContexteFavoris";
 
-export default function BookCard({ book }: { book: Book }) {
+export default memo(function BookCard({ book }: { book: Book }) {
   const { basculerFavori, estFavori } = useFavoris();
 
   const marque = estFavori(book.key);
@@ -52,4 +53,4 @@ export default function BookCard({ book }: { book: Book }) {
       </div>
     </article>
   );
-}
+});

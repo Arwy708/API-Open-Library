@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 
 export default function Proposition() {
   const [titre, setTitre] = useState("");
@@ -6,7 +6,7 @@ export default function Proposition() {
   const [email, setEmail] = useState("");
   const [envoye, setEnvoye] = useState(false);
 
-  const envoyer = (e: React.FormEvent) => {
+  const envoyer = (e: FormEvent) => {
     e.preventDefault();
 
     if (!titre.trim() || !auteur.trim() || !email.includes("@")) {

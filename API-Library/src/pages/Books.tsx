@@ -1,43 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BookCard from "../components/BookCard";
-import type { Book } from "../types/Book";
 import { searchBooks } from "../services/openLibrary";
+import { useApi } from "../hooks/useApi";
 
 export default function Books() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [author, setAuthor] = useState("");
 
-  useEffect(() => {
-    async function loadBooks() {
-      try {
-        const data = await searchBooks("dune");
-
-        setBooks(data.docs);
-      } catch {
-        setError("Impossible de charger le catalogue.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadBooks();
-  }, []);
+  const { data, loading, error } = useApi(() => searchBooks("dune"), []);
+  const books = data?.docs ?? [];
 
   const filteredBooks = books.filter((book) =>
-  book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  (book.author_name?.[0] ?? "").toLowerCase().includes(author.toLowerCase())
-);
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (book.author_name?.[0] ?? "").toLowerCase().includes(author.toLowerCase())
+  );
 
   if (loading) {
     return <p className="state-message">Chargement du catalogue...</p>;
   }
 
   if (error) {
-    return <p className="state-message error">{error}</p>;
+    return <p className="state-message error">Impossible de charger le catalogue.</p>;
   }
 
   return (
@@ -48,9 +31,7 @@ export default function Books() {
           <h2>Livres</h2>
         </div>
 
-        <p>
-          {filteredBooks.length} / {books.length} livres affichés
-        </p>
+        <p>{filteredBooks.length} / {books.length} livres affichés</p>
 
         <input
           className="champ-saisie"
@@ -75,9 +56,7 @@ export default function Books() {
           ))}
         </div>
       ) : (
-        <p className="state-message">
-          Aucun livre ne correspond à votre recherche.
-        </p>
+        <p className="state-message">Aucun livre ne correspond à votre recherche.</p>
       )}
     </section>
   );
